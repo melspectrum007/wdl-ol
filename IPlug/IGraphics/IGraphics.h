@@ -56,297 +56,203 @@ public:
   //These are NanoVG only, may be refactored
   virtual void BeginFrame() {};
   virtual void EndFrame() {};
-  virtual void ViewInitialized(void* layer) {};
+  virtual void ViewInitialized(void* pLayer) {};
   //
 
-  /** Called by platform IGraphics class when UI created and when moving to a new screen with different DPI, implementations in draw class must call the base implementation
-   * @param scale An integer specifying the scale of the display, where 2 = mac retina /todo better explanation of scale */
+  /** Called by the platform IGraphics class when UI created and when moving to a new screen with different DPI, implementations in draw class must call the base implementation
+   * @param scale An integer specifying the scale of the display, typically 2 on a macOS retina screen */
   virtual void SetDisplayScale(int scale) { mDisplayScale = (float) scale; OnDisplayScale(); };
 
   /** Draw an SVG image to the graphics context
-   * @param svg The image to draw
-   * @param rect The rectangular area to draw the image in
+   * @param svg The SVG image to the graphics context
+   * @param rect The rectangular region to draw the image in
    * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawSVG(ISVG& svg, const IRECT& rect, const IBlend* pBlend = 0) = 0;
 
-  /** Draw an SVG with rotation 
-   * @param svg The svg image to draw to the graphics context
-   * @param destCentreX The X coordinate of the centre point at which to rotate the image around. /todo check this
-   * @param destCentreY The Y coordinate of the centre point at which to rotate the image around. /todo check this
+  /** Draw an SVG image to the graphics context with rotation 
+   * @param svg The SVG image to draw to the graphics context
+   * @param destCentreX The X coordinate in the graphics context of the centre point at which to rotate the image around. /todo check this
+   * @param destCentreY The Y coordinate in the graphics context of the centre point at which to rotate the image around. /todo check this
    * @param width /todo
    * @param height /todo
-   * @param angle angle the angle to rotate the bitmap mask at in degrees clockwise /see IGraphicsDrawing documentation
+   * @param angle The angle to rotate the bitmap mask at in degrees clockwise
    * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawRotatedSVG(ISVG& svg, float destCentreX, float destCentreY, float width, float height, double angle, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param bitmap The bitmap image to draw to the graphics context
-   @param rect The rectangular area to draw the image in
-   @param srcX <#srcX description#>
-   @param srcY <#srcY description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** Draw a bitmap (raster) image to the graphics context
+   * @param bitmap The bitmap image to draw to the graphics context
+   * @param rect The rectangular region to draw the image in
+   * @param srcX The X coordinate in the graphics context in the source image to draw from
+   * @param srcY The Y coordinate in the graphics context in the source image to draw from
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawBitmap(IBitmap& bitmap, const IRECT& rect, int srcX, int srcY, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param bitmap The bitmap image to draw to the graphics context
-   @param destCentreX The X coordinate of the centre point at which to rotate the image around. /todo check this
-   @param destCentreY The Y coordinate of the centre point at which to rotate the image around. /todo check this
-   @param angle The angle of rotation in degrees
-   @param yOffsetZeroDeg /todo
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** Draw a bitmap (raster) image to the graphics context with rotation
+   * @param bitmap The bitmap image to draw to the graphics context
+   * @param destCentreX The X coordinate in the graphics context of the centre point at which to rotate the image around. /todo check this
+   * @param destCentreY The Y coordinate in the graphics context of the centre point at which to rotate the image around. /todo check this
+   * @param angle The angle of rotation in degrees
+   * @param yOffsetZeroDeg /todo
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawRotatedBitmap(IBitmap& bitmap, int destCentreX, int destCentreY, double angle, int yOffsetZeroDeg = 0, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param angle the angle to rotate the bitmap mask at in degrees clockwise /see IGraphicsDrawing documentation
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** Draw a rotated, masked bitmap to the graphics context
+   * @param base The base bitmap image to draw to the graphics context /todo explain base
+   * @param mask The mask bitmap image to draw to the graphics context /todo explain mask
+   * @param top The bitmap image to draw to the graphics context /todo explain top
+   * @param x The X coordinate in the graphics context at which to draw
+   * @param y The Y coordinate in the graphics context at which to draw
+   * @param angle The angle to rotate the bitmap mask at in degrees clockwise
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawRotatedMask(IBitmap& base, IBitmap& mask, IBitmap& top, int x, int y, double angle, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param x <#x description#>
-   @param y <#y description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** Fill a point/pixel with a color. /todo what about high DPI displays
+   * @param color The color to fill the point with
+   * @param x The X coordinate in the graphics context at which to draw
+   * @param y The Y coordinate in the graphics context at which to draw
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawPoint(const IColor& color, float x, float y, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param x <#x description#>
-   @param y <#y description#>
-  */
+  /** Fill a point/pixel with a color. /todo what about high DPI displays 
+   * @param color The color to fill the shape with
+   * @param x The X coordinate in the graphics context at which to draw
+   * @param y The Y coordinate in the graphics context at which to draw */
   virtual void ForcePixel(const IColor& color, int x, int y) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param x1 <#x1 description#>
-   @param y1 <#y1 description#>
-   @param x2 <#x2 description#>
-   @param y2 <#y2 description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to draw the shape with
+   * @param x1 The X coordinate in the graphics context of the start of the line
+   * @param y1 The Y coordinate in the graphics context of the start of the line
+   * @param x2 The X coordinate in the graphics context of the end of the line
+   * @param y2 The Y coordinate in the graphics context of the end of the line
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawLine(const IColor& color, float x1, float y1, float x2, float y2, const IBlend* pBlend = 0) = 0;
 
-  /**
-   <#Description#>
-
-   @param color <#color description#>
-   @param x1 <#x1 description#>
-   @param y1 <#y1 description#>
-   @param x2 <#x2 description#>
-   @param y2 <#y2 description#>
-   @param x3 <#x3 description#>
-   @param y3 <#y3 description#>
-   @param pBlend Optional blend method, see IBlend documentation
-   */
+  /** @param color The color to draw the shape with
+   * @param x1 The X coordinate in the graphics context of the first vertex
+   * @param y1 The Y coordinate in the graphics context of the first vertex
+   * @param x2 The X coordinate in the graphics context of the second vertex
+   * @param y2 The Y coordinate in the graphics context of the second vertex
+   * @param x3 The X coordinate in the graphics context of the third vertex
+   * @param y3 The Y coordinate in the graphics context of the third vertex
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawTriangle(const IColor& color, float x1, float y1, float x2, float y2, float x3, float y3, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to draw the shape with
+   * @param rect The rectangular region to draw the shape in
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawRect(const IColor& color, const IRECT& rect, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param .f <#.f description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to draw the shape with
+   * @param rect The rectangular region to draw the shape in
+   * @param cr The corner width in pixels
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawRoundRect(const IColor& color, const IRECT& rect, float cr = 5.f, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo
-
-   @param color The colour to draw/fill the shape with>
-   @param cx <#cx description#>
-   @param cy <#cy description#>
-   @param r <#r description#>
-   @param aMin the start angle  of the arc at in degrees clockwise where 0 is up /see IGraphicsDrawing documentation
-   @param aMax the end angle  of the arc at in degrees clockwise where 0 is up /see IGraphicsDrawing documentation
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to draw the shape with
+   * @param cx The X coordinate in the graphics context of the centre of the circle on which the arc lies
+   * @param cy The Y coordinate in the graphics context of the centre of the circle on which the arc lies
+   * @param r The radius of the circle on which the arc lies
+   * @param aMin the start angle  of the arc at in degrees clockwise where 0 is up
+   * @param aMax the end angle  of the arc at in degrees clockwise where 0 is up
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawArc(const IColor& color, float cx, float cy, float r, float aMin, float aMax, const IBlend* pBlend = 0) = 0;
 
-
-
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param cx <#cx description#>
-   @param cy <#cy description#>
-   @param r <#r description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to draw the shape with
+   * @param cx The X coordinate in the graphics context of the centre of the circle
+   * @param cy The Y coordinate in the graphics context of the centre of the circle
+   * @param r The radius of the circle
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawCircle(const IColor& color, float cx, float cy, float r, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
+  /** @param color The color to draw the shape with
+   * @param x Pointer to the first element in an array of x coordinates for the vertices of the polygon
+   * @param y Pointer to the first element in an array of y coordinates for the vertices of the polygon
+   * @param nPoints The number of points in the coordinate arrays
+   * @param pBlend Optional blend method, see IBlend documentation */
+  virtual void DrawConvexPolygon(const IColor& color, float* x, float* y, int nPoints, const IBlend* pBlend = 0) = 0;
 
-   @param color The colour to draw/fill the shape with>
-   @param x <#x description#>
-   @param y <#y description#>
-   @param npoints <#npoints description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
-  virtual void DrawConvexPolygon(const IColor& color, float* x, float* y, int npoints, const IBlend* pBlend = 0) = 0;
-
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to draw the shape with
+   * @param rect The rectangular region to draw the shape in
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void DrawDottedRect(const IColor& color, const IRECT& rect, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param x1 <#x1 description#>
-   @param y1 <#y1 description#>
-   @param x2 <#x2 description#>
-   @param y2 <#y2 description#>
-   @param x3 <#x3 description#>
-   @param y3 <#y3 description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to fill the shape with
+   * @param x1 The X coordinate in the graphics context of the first vertex
+   * @param y1 The Y coordinate in the graphics context of the first vertex
+   * @param x2 The X coordinate in the graphics context of the second vertex
+   * @param y2 The Y coordinate in the graphics context of the second vertex
+   * @param x3 The X coordinate in the graphics context of the third vertex
+   * @param y3 The Y coordinate in the graphics context of the third vertex
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void FillTriangle(const IColor& color, float x1, float y1, float x2, float y2, float x3, float y3, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to fill the shape with
+   * @param rect The rectangular region to fill the shape in
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void FillRect(const IColor& color, const IRECT& rect, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param .f <#.f description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to fill the shape with
+   * @param rect The rectangular region to fill the shape in
+   * @param cr The corner radius in pixels
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void FillRoundRect(const IColor& color, const IRECT& rect, float cr = 5.f, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param cx <#cx description#>
-   @param cy <#cy description#>
-   @param r <#r description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to fill the shape with
+   * @param cx The X coordinate in the graphics context of the centre of the circle
+   * @param cy The Y coordinate in the graphics context of the centre of the circle
+   * @param r The radius of the circle
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void FillCircle(const IColor& color, float cx, float cy, float r, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param cx <#cx description#>
-   @param cy <#cy description#>
-   @param r <#r description#>
-   @param aMin <#aMin description#>
-   @param aMax <#aMax description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** @param color The color to fill the shape with
+   * @param cx The X coordinate in the graphics context of the centre of the circle on which the arc lies
+   * @param cy The Y coordinate in the graphics context of the centre of the circle on which the arc lies
+   * @param r The radius of the circle on which the arc lies
+   * @param aMin the start angle  of the arc at in degrees clockwise where 0 is up
+   * @param aMax the end angle  of the arc at in degrees clockwise where 0 is up
+   * @param pBlend Optional blend method, see IBlend documentation */
   virtual void FillArc(const IColor& color, float cx, float cy, float r, float aMin, float aMax, const IBlend* pBlend = 0) = 0;
 
-  /**
-   /todo <#Description#>
+  /** @param color The color to fill the shape with
+   * @param x Pointer to the first element in an array of x coordinates for the vertices of the polygon
+   * @param y Pointer to the first element in an array of y coordinates for the vertices of the polygon
+   * @param nPoints The number of points in the coordinate arrays
+   * @param pBlend Optional blend method, see IBlend documentation */
+  virtual void FillConvexPolygon(const IColor& color, float* x, float* y, int nPoints, const IBlend* pBlend = 0) = 0;
 
-   @param color The colour to draw/fill the shape with>
-   @param x <#x description#>
-   @param y <#y description#>
-   @param npoints <#npoints description#>
-   @param pBlend Optional blend method, see IBlend documentation
-  */
-  virtual void FillConvexPolygon(const IColor& color, float* x, float* y, int npoints, const IBlend* pBlend = 0) = 0;
-
-  /**
-   /todo <#Description#>
-
-   @param text <#text description#>
-   @param str <#str description#>
-   @param destRect <#destRect description#>
-   @param measure <#measure description#>
-   @return <#return value description#>
-  */
+  /** @param text An IText struct containing font and text properties and layout info
+   * @param str The text string to draw in the graphics context
+   * @param destRect Either should contain the rectangular region in the graphics where you would like to draw the text (when measure = false)
+   * or if measure == true, after calling the method this IRECT will be updated with the rectangular region the text will occupy
+   * @param measure Pass true if you wish to measure the rectangular region this text will occupy, rather than draw
+   * @return true on valid input data /todo check this */
   virtual bool DrawText(const IText& text, const char* str, IRECT& destRect, bool measure = false) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param text <#text description#>
-   @param str <#str description#>
-   @param destRect <#destRect description#>
-   @return <#return value description#>
-  */
+  /** @param text An IText struct containing font and text properties and layout info
+   * @param str The text string to draw in the graphics context
+   * @param destRect after calling the method this IRECT will be updated with the rectangular region the text will occupy
+   * @return true on valid input data /todo check this */
   virtual bool MeasureText(const IText& text, const char* str, IRECT& destRect) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @return <#return value description#>
-  */
+  /** Get the color of a pixel in the graphics context 
+   * @param x The X coordinate in the graphics context of the pixel
+   * @param y The Y coordinate in the graphics context of the pixel
+   * @return An IColor specifiying the color of the pixel at x,y */
   virtual IColor GetPoint(int x, int y)  = 0;
 
-  /**
-   /todo <#Description#>
-  */
-  virtual void* GetData() = 0;
+  /** Gets a void pointer to IGraphics Draw Class context data (e.g raw framebuffer). 
+   * See draw class implementation headers (e.g. IGraphicsLice.h) for what you can cast the void pointer to */
+   virtual void* GetData() = 0;
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return A string representing the Drawing API in use e.g. "LICE" */
   virtual const char* GetDrawingAPIStr() = 0;
 
+  /** This is overridden in some IGraphics drawing classes to clip drawing to a rectangular region
+   * @param rect The rectangular region to clip  */
+  inline virtual void ClipRegion(const IRECT& rect) {};
 
-  /**
-   /todo <#Description#>
-
-   @param r <#r description#>
-   @return <#return value description#>
-  */
-  inline virtual void ClipRegion(const IRECT& r) {}; // overridden in some IGraphics drawing classes to clip drawing
-
-  /**
-   <#Description#>
-
-   @return <#return value description#>
-   */
-  inline virtual void ResetClipRegion() {}; // overridden in some IGraphics drawing classes to reset clip
+  /** This is overridden in some IGraphics drawing classes to reset clipping after drawing a shape */
+  inline virtual void ResetClipRegion() {};
 
 #pragma mark - IGraphics drawing API implementation (bitmap handling)
   virtual IBitmap LoadBitmap(const char* name, int nStates = 1, bool framesAreHorizontal = false);
@@ -357,7 +263,6 @@ public:
   IBitmap GetScaledBitmap(IBitmap& src);
 
   /**
-   <#Description#>
    */
   virtual void OnDisplayScale();
 
@@ -365,7 +270,6 @@ public:
 
 
   /**
-   <#Description#>
    */
   virtual void RenderDrawBitmap() {}
 
@@ -374,65 +278,53 @@ public:
   /** Draws a bitmap into the graphics context
 
  @param bitmap - the bitmap to draw
-   @param rect - where to draw the bitmap
-   @param bmpState - the frame of the bitmap to draw
-   @param pBlend - blend operation
+   * @param rect - where to draw the bitmap
+   * @param bmpState - the frame of the bitmap to draw
+   * @param pBlend - blend operation
   */
   void DrawBitmap(IBitmap& bitmap, const IRECT& rect, int bmpState = 1, const IBlend* pBlend = 0);
 
   /** Draws monospace bitmapped text. Useful for identical looking text on multiple platforms.
-   @param bitmap the bitmap containing glyphs to draw
-   @param rect where to draw the bitmap
-   @param text text properties (note - many of these are irrelevant for bitmapped text)
-   @param pBlend blend operation
-   @param str the string to draw
-   @param vCenter centre the text vertically
-   @param multiline should the text spill onto multiple lines
-   @param charWidth how wide is a character in the bitmap
-   @param charHeight how high is a character in the bitmap
-   @param charOffset what is the offset between characters drawn
+   * @param bitmap the bitmap containing glyphs to draw
+   * @param rect where to draw the bitmap
+   * @param text text properties (note - many of these are irrelevant for bitmapped text)
+   * @param pBlend blend operation
+   * @param str the string to draw
+   * @param vCenter centre the text vertically
+   * @param multiline should the text spill onto multiple lines
+   * @param charWidth how wide is a character in the bitmap
+   * @param charHeight how high is a character in the bitmap
+   * @param charOffset what is the offset between characters drawn
   */
   void DrawBitmapedText(IBitmap& bitmap, IRECT& rect, IText& text, IBlend* pBlend, const char* str, bool vCenter = true, bool multiline = false, int charWidth = 6, int charHeight = 12, int charOffset = 0);
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param x <#x description#>
-   @param pBlend Optional blend method, see IBlend documentation
+  /** @param color The color to fill the shape with
+   * @param rect The rectangular region to fill the shape in
+   * @param x The X coordinate in the graphics context at which to draw
+   * @param pBlend Optional blend method, see IBlend documentation
   */
   void DrawVerticalLine(const IColor& color, const IRECT& rect, float x, const IBlend* pBlend = 0);
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param y <#y description#>
-   @param pBlend Optional blend method, see IBlend documentation
+  /** @param color The color to fill the shape with
+   * @param rect The rectangular region to fill the shape in
+   * @param y The Y coordinate in the graphics context at which to draw
+   * @param pBlend Optional blend method, see IBlend documentation
   */
   void DrawHorizontalLine(const IColor& color, const IRECT& rect, float y, const IBlend* pBlend = 0);
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param xi <#xi description#>
-   @param yLo <#yLo description#>
-   @param yHi <#yHi description#>
-   @param pBlend Optional blend method, see IBlend documentation
+  /** @param color The color to fill the shape with
+   * @param xi <#xi>
+   * @param yLo <#yLo>
+   * @param yHi <#yHi>
+   * @param pBlend Optional blend method, see IBlend documentation
   */
   void DrawVerticalLine(const IColor& color, float xi, float yLo, float yHi, const IBlend* pBlend = 0);
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param yi <#yi description#>
-   @param xLo <#xLo description#>
-   @param xHi <#xHi description#>
-   @param pBlend Optional blend method, see IBlend documentation
+  /** @param color The color to fill the shape with
+   * @param yi <#yi>
+   * @param xLo <#xLo>
+   * @param xHi <#xHi>
+   * @param pBlend Optional blend method, see IBlend documentation
   */
   void DrawHorizontalLine(const IColor& color, float yi, float xLo, float xHi, const IBlend* pBlend = 0);
 
@@ -440,24 +332,22 @@ public:
   /**
    Helper function to draw a radial line, useful for pointers on dials
    
-   @param color the colour of the line
-   @param cx centre point x coordinate
-   @param cy centre point y coordinate
-   @param angle the angle to draw at in degrees clockwise where 0 is up /see IGraphicsDrawing documentation
-   @param rMin minima of the radial line (distance from cx,cy)
-   @param rMax maxima of the radial line (distance from cx,cy)
-   @param pBlend blend operation
+   * @param color the color of the line
+   * @param cx centre point x coordinate
+   * @param cy centre point y coordinate
+   * @param angle The angle to draw at in degrees clockwise where 0 is up
+   * @param rMin minima of the radial line (distance from cx,cy)
+   * @param rMax maxima of the radial line (distance from cx,cy)
+   * @param pBlend blend operation
    */
   void DrawRadialLine(const IColor& color, float cx, float cy, float angle, float rMin, float rMax, const IBlend* pBlend = 0);
   
   /**
-   /todo <#Description#>
-   
-   @param color The colour to draw/fill the shape with>
-   @param rect The rectangular area to draw/fill the shape in
-   @param gridSizeH <#gridSizeH description#>
-   @param gridSizeV <#gridSizeV description#>
-   @param pBlend Optional blend method, see IBlend documentation
+  * @param color The color to fill the shape with
+   * @param rect The rectangular region to fill the shape in
+   * @param gridSizeH <#gridSizeH>
+   * @param gridSizeV <#gridSizeV>
+   * @param pBlend Optional blend method, see IBlend documentation
    */
   void DrawGrid(const IColor& color, const IRECT& rect, int gridSizeH, int gridSizeV, const IBlend* pBlend = 0);
   
@@ -479,7 +369,7 @@ public:
   virtual void PathRoundRect(const IRECT& rect, float cr = 5.f) {}
   virtual void PathArc(float cx, float cy, float r, float aMin, float aMax) {}
   virtual void PathCircle(float cx, float cy, float r) {}
-  virtual void PathConvexPolygon(float* x, float* y, int npoints) {}
+  virtual void PathConvexPolygon(float* x, float* y, int nPoints) {}
   
   virtual void PathMoveTo(float x, float y) {}
   virtual void PathLineTo(float x, float y) {}
@@ -489,637 +379,348 @@ public:
   virtual void PathFill(const IPattern& pattern, const IFillOptions& options = IFillOptions(), const IBlend* pBlend = 0) {}
 
 #pragma mark - IGraphics platform implementation
-  /**
-   /todo <#Description#>
-  */
+  /** */ 
   virtual void HideMouseCursor() {};
 
-  /**
-   /todo <#Description#>
-  */
+  /** */
   virtual void ShowMouseCursor() {};
 
-  /**
-   /todo <#Description#>
-  */
+  /** */ 
   virtual void ForceEndUserEdit() = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param w <#w description#>
-   @param h <#h description#>
-   @param scale <#scale description#>
-  */
+  /** @param w <#w>
+   * @param h <#h>
+   * @param scale <#scale>  */
   virtual void Resize(int w, int h, float scale);
 
-  /**
-   /todo <#Description#>
-
-   @param pParentWnd <#pParentWnd description#>
+  /** @param pParentWnd <#pParentWnd>
   */
   virtual void* OpenWindow(void* pParentWnd) = 0;
 
-  /**
-   /todo <#Description#>
-  */
+  /** */ 
   virtual void CloseWindow() = 0;
 
-  /**
-   /todo <#Description#>
-  */
+  /** */ 
   virtual void* GetWindow() = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param str <#str description#>
-   @return <#return value description#>
+  /** @param str <#str>
+   * @return <#return value>
   */
   virtual bool GetTextFromClipboard(WDL_String& str) = 0;
 
-  /**
-   /todo <#Description#>
-  */
+  /** */ 
   virtual void UpdateTooltips() = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param str <#str description#>
-   @param caption <#caption description#>
-   @param type <#type description#>
-   @return <#return value description#>
-  */
+  /** @param str <#str>
+   * @param caption <#caption>
+   * @param type <#type>
+   * @return <#return value> */
   virtual int ShowMessageBox(const char* str, const char* caption, int type) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param menu <#menu description#>
-   @param textRect <#textRect description#>
-   @return <#return value description#>
-  */
+  /** @param menu <#menu>
+   * @param textRect <#textRect>
+   * @return <#return value> */
   virtual IPopupMenu* CreateIPopupMenu(IPopupMenu& menu, IRECT& textRect) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param pControl <#pControl description#>
-   @param text <#text description#>
-   @param textRect <#textRect description#>
-   @param "" <#"" description#>
-   @param pParam <#pParam description#>
-  */
+  /** @param pControl <#pControl>
+   * @param text <#text>
+   * @param textRect <#textRect>
+   * @param "" <#"">
+   * @param pParam <#pParam>  */
   virtual void CreateTextEntry(IControl& control, const IText& text, const IRECT& textRect, const char* str = "") = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param filename <#filename description#>
-   @param path <#path description#>
-   @param action <#action description#>
-   @param extensions <#extensions description#>
-  */
+  /** @param filename <#filename>
+   * @param path <#path>
+   * @param action <#action>
+   * @param extensions <#extensions> */
   virtual void PromptForFile(WDL_String& filename, WDL_String& path, EFileAction action = kFileOpen, const char* extensions = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param color The colour to draw/fill the shape with>
-   @param "" <#"" description#>
-   @return <#return value description#>
-  */
+  /** @param color When a color is chosen the IColor referenced will be updated with the new color
+   * @param str The text to display in the dialog box e.g. "Please choose a color..."
+   * @return /true if prompt completed successfully */
   virtual bool PromptForColor(IColor& color, const char* str = "") = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param url <#url description#>
-   @param msgWindowTitle <#msgWindowTitle description#>
-   @param confirmMsg <#confirmMsg description#>
-   @param errMsgOnFailure <#errMsgOnFailure description#>
-   @return <#return value description#>
-  */
+  /** @param url <#url>
+   * @param msgWindowTitle <#msgWindowTitle>
+   * @param confirmMsg <#confirmMsg>
+   * @param errMsgOnFailure <#errMsgOnFailure>
+   * @return <#return value> */
   virtual bool OpenURL(const char* url, const char* msgWindowTitle = 0, const char* confirmMsg = 0, const char* errMsgOnFailure = 0) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @param path <#path> */
   virtual const char* GetUIAPI() { return ""; }
 
-
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @param path <#path> */
   virtual bool WindowIsOpen() { return GetWindow(); }
 
-
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-  */
+  /** @param path <#path> */
   virtual void HostPath(WDL_String& path) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-  */
+  /** @param path <#path> */
   virtual void PluginPath(WDL_String& path) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-  */
+  /** @param path <#path> */
   virtual void DesktopPath(WDL_String& path) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-   */
+  /** @param path <#path> */
   virtual void UserHomePath(WDL_String& path) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-   @param isSystem <#isSystem description#>
-  */
+  /** @param path <#path>
+   * @param isSystem <#isSystem> */
   virtual void AppSupportPath(WDL_String& path, bool isSystem = false) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-  */
+  /** @param path <#path> */
   virtual void SandboxSafeAppSupportPath(WDL_String& path) = 0;
 
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-   @param isSystem <#isSystem description#>
-  */
+  /** @param path <#path>
+   * @param isSystem <#isSystem> */
   virtual void VST3PresetsPath(WDL_String& path, const char* mfrName, const char* pluginName, bool isSystem = true) { path.Set(""); }
 
-
-  /**
-   /todo <#Description#>
-
-   @param path <#path description#>
-   @param select <#select description#>
-   @return <#return value description#>
-  */
+  /** @param path <#path>
+   * @param select <#select>
+   * @return <#return value> */
   virtual bool RevealPathInExplorerOrFinder(WDL_String& path, bool select = false) = 0;
 
-  /*
-   Used on Windows to set the HINSTANCE handle, which allows graphics APIs to load resources from the binary
-
-   @param instance <#instance description#>
-  */
+  /* Used on Windows to set the HINSTANCE handle, which allows graphics APIs to load resources from the binary
+   * @param instance <#instance> */
   virtual void SetPlatformInstance(void* pInstance) {}
 
 
-  /**
-   /todo <#Description#>
-  */
+  /** */
   virtual void* GetPlatformInstance() { return nullptr; }
 
   /**
    Used with IGraphicsLice (possibly others) in order to set the core graphics draw context on macOS and the GDI HDC draw context handle on Windows
    On macOS, this is called by the platform IGraphics class IGraphicsMac, on Windows it is called by the drawing class e.g. IGraphicsLice.
 
-   @param pContext <#pContext description#>
-  */
+   * @param pContext <#pContext> */
   virtual void SetPlatformContext(void* pContext) { mPlatformContext = pContext; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   void* GetPlatformContext() { return mPlatformContext; }
 
-  /**
-   Try to ascertain the full path of a resource.
+  /** Try to ascertain the full, absolute path of a resource based on it's name
 
-   @param name <#name description#>
-   @param type <#type description#>
-   @param result <#result description#>
-   @return <#return value description#>
-  */
+   * @param name <#name>
+   * @param type <#type>
+   * @param result <#result>
+   * @return \c True on success */
   virtual bool OSFindResource(const char* name, const char* type, WDL_String& result) = 0;
 
 #pragma mark - IGraphics base implementation
   IGraphics(IDelegate& dlg, int w, int h, int fps = 0);
   virtual ~IGraphics();
 
-  /**
-   /todo <#Description#>
-
-   @param rect The rectangular area to draw/fill the shape in
-   @return <#return value description#>
-  */
+  /** @param rect The rectangular region which will be added to to mark what is dirty in the context
+   * @return <#return value> */
   bool IsDirty(IRECT& rect);
 
-  /**
-   /todo <#Description#>
-
-   @param rect The rectangular area to draw/fill the shape in
-  */
+  /** @param rect The rectangular region to draw */
   virtual void Draw(const IRECT& rect);
 
-  /**
-   /todo <#Description#>
-
-   @param name <#name description#>
-   @return <#return value description#>
-  */
+  /** @param name <#name>
+   * @return <#return value> */
   virtual ISVG LoadSVG(const char* name); // TODO: correct place?
-
 
   /** This method is called after interacting with a control, so that any other controls linked to the same parameter index, will also be set dirty, and have their values updated.
    * @param caller The control that triggered the parameter change. */
   void UpdatePeers(IControl* pCaller);
 
-  /**
-   /todo <#Description#>
-
-   @param pControl <#pControl description#>
-   @param pParam <#pParam description#>
-   @param textRect <#textRect description#>
-  */
+  /** @param pControl <#pControl>
+   * @param pParam <#pParam>
+   * @param textRect <#textRect> */
   void PromptUserInput(IControl& control, IRECT& textRect);
 
-  /**
-   /todo <#Description#>
-
-   @param pControl <#pControl description#>
-   @param pParam <#pParam description#>
-   @param txt <#txt description#>
-  */
+  /** @param pControl <#pControl>
+   * @param pParam <#pParam>
+   * @param txt <#txt> */
   void SetControlValueFromStringAfterPrompt(IControl& control, const char* txt);
 
-  /**
-   /todo <#Description#>
-
-   @param menu <#menu description#>
-   @param x <#x description#>
-   @param y <#y description#>
-   @return <#return value description#>
-  */
+  /** @param menu <#menu>
+   * @param x The X coordinate in the graphics context at which to draw
+   * @param y The Y coordinate in the graphics context at which to draw
+   * @return <#return value> */
   IPopupMenu* CreateIPopupMenu(IPopupMenu& menu, float x, float y) { IRECT tempRect = IRECT(x,y,x,y); return CreateIPopupMenu(menu, tempRect); }
 
-  /**
-   /todo <#Description#>
-
-   @param strict <#strict description#>
-  */
+  /** @param strict <#strict> */
   void SetStrictDrawing(bool strict);
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   int Width() const { return mWidth; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   int Height() const { return mHeight; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   int WindowWidth() const { return int((float) mWidth * mScale); }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   int WindowHeight() const { return int((float) mHeight * mScale); }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   int FPS() const { return mFPS; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   float GetScale() const { return mScale; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   float GetDisplayScale() const { return mDisplayScale; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return <#return value> */
   IDelegate& GetDelegate() { return mDelegate; }
 
   void AttachBackground(const char* name);
   void AttachPanelBackground(const IColor& color);
   void AttachKeyCatcher(IControl& control);
 
-  /**
-   /todo <#Description#>
-
-   @param control <#control description#>
-   @return <#return value description#>
-  */
+  /** @param control <#control>
+   * @return <#return value> */
   int AttachControl(IControl* pControl);
 
-  /**
-   /todo <#Description#>
-
-   @param idx <#idx description#>
-   @return <#return value description#>
-  */
+  /** @param idx The index of the control to get
+   * @return A pointer to the IControl object at idx */
   IControl* GetControl(int idx) { return mControls.Get(idx); }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return The number of controls that have been added to this graphics context */
   int NControls() const { return mControls.GetSize(); }
 
-
-  /**
-   /todo <#Description#>
-
-   @param paramIdx <#paramIdx description#>
-   @param hide <#hide description#>
-  */
+  /** @param paramIdx <#paramIdx>
+   * @param hide <#hide> */
   void HideControl(int paramIdx, bool hide);
 
-  /**
-   /todo <#Description#>
-
-   @param paramIdx <#paramIdx description#>
-   @param gray <#gray description#>
+  /** @param paramIdx <#paramIdx>
+   * @param gray <#gray>
   */
   void GrayOutControl(int paramIdx, bool gray);
 
-  /**
-   /todo <#Description#>
-
-   @param paramIdx <#paramIdx description#>
-   @param lo <#lo description#>
-   @param hi <#hi description#>
-   @param normalized <#normalized description#>
-  */
+  /** @param paramIdx <#paramIdx>
+   * @param lo <#lo>
+   * @param hi <#hi>
+   * @param normalized <#normalized>*/
   void ClampControl(int paramIdx, double lo, double hi, bool normalized);
 
-  /**
-   /todo <#Description#>
-  */
+  /***/ 
   void SetAllControlsDirty();
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param mod <#mod description#>
-  */
+  /** @param x The X coordinate in the graphics context at which the mouse event occurred
+   * @param y The Y coordinate in the graphics context at which the mouse event occurred
+   * @param mod IMouseMod struct contain information about the modifiers held */
   void OnMouseDown(float x, float y, const IMouseMod& mod);
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param mod <#mod description#>
-  */
+  /** @param x The X coordinate in the graphics context at which the mouse event occurred
+   * @param y The Y coordinate in the graphics context at which the mouse event occurred
+   * @param mod IMouseMod struct contain information about the modifiers held */
   void OnMouseUp(float x, float y, const IMouseMod& mod);
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param dX <#dX description#>
-   @param dY <#dY description#>
-   @param mod <#mod description#>
-  */
+  /** @param x The X coordinate in the graphics context at which the mouse event occurred
+   * @param y The Y coordinate in the graphics context at which the mouse event occurred
+   * @param dX Delta X value /todo explain
+   * @param dY Delta Y value /todo explain
+   * @param mod IMouseMod struct contain information about the modifiers held */
   void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod& mod);
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param mod <#mod description#>
-   @return <#return value description#>
-  */
+  /** @param x The X coordinate in the graphics context at which the mouse event occurred
+   * @param y The Y coordinate in the graphics context at which the mouse event occurred
+   * @param mod IMouseMod struct contain information about the modifiers held
+   * @return <#return value> */
   bool OnMouseDblClick(float x, float y, const IMouseMod& mod);
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param mod <#mod description#>
-   @param d <#d description#>
-  */
+  /** @param x The X coordinate in the graphics context at which the mouse event occurred
+   * @param y The Y coordinate in the graphics context at which the mouse event occurred
+   * @param mod IMouseMod struct contain information about the modifiers held
+   * @param d Delta value /todo explain */
   void OnMouseWheel(float x, float y, const IMouseMod& mod, float d);
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param key <#key description#>
-   @return <#return value description#>
-  */
+  /** @param x The X coordinate in the graphics context of the mouse cursor at the time of the key press
+   * @param y The Y coordinate in the graphics context of the mouse cursor at the time of the key press
+   * @param key An integer represent the key pressed, see EIPlugKeyCodes
+   * @return \c True if handled /todo check this */
   bool OnKeyDown(float x, float y, int key);
 
-  /**
-   /todo <#Description#>
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @param mod <#mod description#>
-   @return <#return value description#>
-  */
+  /** @param x The X coordinate in the graphics context at which to draw
+   * @param y The Y coordinate in the graphics context at which to draw
+   * @param mod IMouseMod struct contain information about the modifiers held
+   * @return \c True if handled /todo check this */
   bool OnMouseOver(float x, float y, const IMouseMod& mod);
 
-  /**
-   /todo <#Description#>
-  */
+  /** */
   void OnMouseOut();
 
-  /**
-   /todo <#Description#>
-
-   @param str <#str description#>
-   @param x <#x description#>
-   @param y <#y description#>
-  */
-
-  /**
-   /todo <#Description#>
-
-   @param str <#str description#>
-   @param x <#x description#>
-   @param y <#y description#>
-  */
+  /** @param str A CString with the absolute path of the dropped item
+   * @param x The X coordinate in the graphics context where the drag and drop occurred
+   * @param y The Y coordinate in the graphics context where the drag and drop occurred */
   void OnDrop(const char* str, float x, float y);
 
-  /**
-   /todo <#Description#>
-  */
+  /** */ 
   void OnGUIIdle();
 
-  /**
-   [AAX only]
-
-   @param x <#x description#>
-   @param y <#y description#>
-   @return <#return value description#>
-  */
+  /** [AAX only] This can be called by the ProTools API class (e.g. IPlugAAX) in order to ascertain the parameter linked to the control under the mouse.
+   * The purpose is to facillitate ProTool's special contextual menus (for configuring parameter automation)
+   * @param x The X coordinate in the graphics context to check
+   * @param y The Y coordinate in the graphics contextto check
+   * @return An integer representing the parameter index that was found (or -1 if not found) */
   int GetParamIdxForPTAutomation(float x, float y);
 
-  /**
-   [AAX only]
-
-   @return <#return value description#>
-  */
+  /** [AAX only]
+   * @return An integer representing the last clicked parameter index (or -1 if none) */
   int GetLastClickedParamForPTAutomation();
 
-  /**
-   [AAX only]
-
-   @param paramIdx <#paramIdx description#>
-   @param isHighlighted <#isHighlighted description#>
-   @param color The colour to draw/fill the shape with>
-  */
+  /** [AAX only] Called by the 
+   * @param paramIdx The index of the parameter to highlight
+   * @param isHighlighted /c true if the parameter should be highlighted 
+   * @param color An integer corresponding to AAX_EParameterHighlight /todo check Enum name */
   void SetPTParameterHighlight(int paramIdx, bool isHighlighted, int color);
 
-  /**
-   [VST3 primarily]
-
-   @param controlIdx <#controlIdx description#>
-   @param paramIdx <#paramIdx description#>
-   @param x <#x description#>
-   @param y <#y description#>
-  */
+  /** [VST3 primarily]
+   * @param controlIdx <#controlIdx>
+   * @param paramIdx <#paramIdx>
+   * @param x The X coordinate in the graphics context at which to draw
+   * @param y The Y coordinate in the graphics context at which to draw */
   void PopupHostContextMenuForParam(int controlIdx, int paramIdx, float x, float y);
 
-  /**
-  /todo <#Description#>
-
-  @param canHandle <#canHandle description#>
-  */
+  /** @param enable Set \c True if you want to handle mouse over messages. Note: this may increase the amount CPU usage if you redraw on mouse overs etc */
   void HandleMouseOver(bool canHandle) { mHandleMouseOver = canHandle; }
 
-  /**
-   /todo <#Description#>
-  */
+  /***/ 
   void ReleaseMouseCapture();
 
-  /**
-   /todo <#Description#>
-
-   @param enable <#enable description#>
-  */
+  /** @param enable Set \c True to enable tool tips when the user mouses over a control */
   void EnableTooltips(bool enable);
 
-  /**
-   /todo <#Description#>
-  */
+  /** Call this method in order to create tool tips for every IControl that show the associated parameter's name */ 
   void AssignParamNameToolTips();
 
-  /**
-   /todo <#Description#>
-
-   @param enable <#enable description#>
-  */
+  /** @param enable Set \c True if you wish to draw the rectangular region of the graphics context occupied by each IControl in mControls  */
   inline void ShowControlBounds(bool enable) { mShowControlBounds = enable; }
 
-
-  /**
-   /todo <#Description#>
-
-   @param enable <#enable description#>
-  */
+  /** @param enable Set \c True if you wish to show the rectangular region that is drawn on each frame, in order to debug redraw problems */
   inline void ShowAreaDrawn(bool enable) { mShowAreaDrawn = enable; }
 
-  /**
-   /todo <#Description#>
-
-   @param enable <#enable description#>
-   @param file <#file description#>
-   @param gridsize <#gridsize description#>
-  */
+  /** Live edit mode allows you to relocate controls at runtime in debug builds and save the locations to a predefined file (e.g. main plugin .cpp file) /todo we need a separate page for liveedit info
+   * @param enable Set \c True if you wish to enable live editing mode
+   * @param file The absolute path of the file which contains the layout info (correctly tagged) for live editing
+   * @param gridsize The size of the layout grid in pixels */
   void EnableLiveEdit(bool enable, const char* file = 0, int gridsize = 10);
 
-  /**
-   /todo Get the area marked for drawing
-
-   @return An IRECT that corresponds to the area currently marked for drawing
-  */
+  /** Return the rectangular region of the graphics context marked for drawing
+   * @return An IRECT that corresponds to the rectangular region currently marked for drawing */
   IRECT GetDrawRect() const { return mDrawRECT; }
 
-
-  /**
-   Get an IRECT that represents the entire UI bounds
-
-   @return An IRECT that corresponds to the entire UI area, with, L = 0, T = 0, R = Width() and B  = Height()
-   */
+  /** Returns an IRECT that represents the entire UI bounds
+   * This is useful for programatically arranging UI elements by slicing up the IRECT using the various IRECT methods
+   * @return An IRECT that corresponds to the entire UI area, with, L = 0, T = 0, R = Width() and B  = Height() */
   IRECT GetBounds() const { return IRECT(0.f, 0.f, (float) Width(), (float) Height()); }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return \c True if the context can handle mouse overs */
   bool CanHandleMouseOver() const { return mHandleMouseOver; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return An integer representing the control index in IGraphics::mControls which the mouse is over, or -1 if it is not */
   inline int GetMouseOver() const { return mMouseOver; }
 
-  /**
-   /todo <#Description#>
-
-   @return <#return value description#>
-  */
+  /** @return \c True if tool tips are enabled */
   inline bool TooltipsEnabled() const { return mEnableTooltips; }
 
-  /**
-   /todo <#Description#>
-
-   @param name <#name description#>
-  */
+  /** @param name The name of the font to load */
   virtual void LoadFont(const char* name);
 
 protected:
