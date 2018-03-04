@@ -41,7 +41,7 @@ public:
 
   /** Override this method to serialize custom state data, if your plugin does state chunks.
    * @param chunk The output bytechunk where data can be serialized
-   * @return \c true if serialization was successful*/
+   * @return \c True if serialization was successful*/
   virtual bool SerializeState(IByteChunk& chunk) { TRACE; return SerializeParams(chunk); }
 
   /** Override this method to unserialize custom state data, if your plugin does state chunks.
@@ -55,7 +55,7 @@ public:
    * to support the ProTools compare light when using custom state chunks. The default implementation will compare the serialized parameters.
    * @param incomingState The incoming state data
    * @param startPos The position to start in the incoming data in bytes
-   * @return \c true in order to indicate that the states are equal. */
+   * @return \c True in order to indicate that the states are equal. */
   virtual bool CompareState(const uint8_t* pIncomingState, int startPos);
 
   /** Override this method to be notified when the UI is opened. */
@@ -161,10 +161,10 @@ public:
    * @param str WDL_String will be set with the Plugin name, architecture, api, build date, build time*/
   void GetBuildInfoStr(WDL_String& str) const;
 
-  /** @return \c true if the plug-in has been set up to do state chunks, via config.h */
+  /** @return \c True if the plug-in has been set up to do state chunks, via config.h */
   bool DoesStateChunks() const { return mStateChunks; }
 
-  /** @return \c true if the plug-in is meant to have a UI, as defined in config.h */
+  /** @return \c True if the plug-in is meant to have a UI, as defined in config.h */
   bool HasUI() const { return mHasUI; }
 
   /** @return The default width of the plug-in UI in pixels, if defined in config.h */
