@@ -65,9 +65,9 @@ public:
 
   /** Draw an SVG image to the graphics context
    * @param svg The SVG image to the graphics context
-   * @param rect The rectangular region to draw the image in
+   * @param bounds The rectangular region to draw the image in
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void DrawSVG(ISVG& svg, const IRECT& rect, const IBlend* pBlend = 0) = 0;
+  virtual void DrawSVG(ISVG& svg, const IRECT& bounds, const IBlend* pBlend = 0) = 0;
 
   /** Draw an SVG image to the graphics context with rotation 
    * @param svg The SVG image to draw to the graphics context
@@ -81,11 +81,11 @@ public:
 
   /** Draw a bitmap (raster) image to the graphics context
    * @param bitmap The bitmap image to draw to the graphics context
-   * @param rect The rectangular region to draw the image in
+   * @param bounds The rectangular region to draw the image in
    * @param srcX The X coordinate in the graphics context in the source image to draw from
    * @param srcY The Y coordinate in the graphics context in the source image to draw from
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void DrawBitmap(IBitmap& bitmap, const IRECT& rect, int srcX, int srcY, const IBlend* pBlend = 0) = 0;
+  virtual void DrawBitmap(IBitmap& bitmap, const IRECT& bounds, int srcX, int srcY, const IBlend* pBlend = 0) = 0;
 
   /** Draw a bitmap (raster) image to the graphics context with rotation
    * @param bitmap The bitmap image to draw to the graphics context
@@ -138,15 +138,15 @@ public:
   virtual void DrawTriangle(const IColor& color, float x1, float y1, float x2, float y2, float x3, float y3, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to draw the shape with
-   * @param rect The rectangular region to draw the shape in
+   * @param bounds The rectangular region to draw the shape in
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void DrawRect(const IColor& color, const IRECT& rect, const IBlend* pBlend = 0) = 0;
+  virtual void DrawRect(const IColor& color, const IRECT& bounds, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to draw the shape with
-   * @param rect The rectangular region to draw the shape in
+   * @param bounds The rectangular region to draw the shape in
    * @param cr The corner width in pixels
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void DrawRoundRect(const IColor& color, const IRECT& rect, float cr = 5.f, const IBlend* pBlend = 0) = 0;
+  virtual void DrawRoundRect(const IColor& color, const IRECT& bounds, float cr = 5.f, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to draw the shape with
    * @param cx The X coordinate in the graphics context of the centre of the circle on which the arc lies
@@ -172,9 +172,9 @@ public:
   virtual void DrawConvexPolygon(const IColor& color, float* x, float* y, int nPoints, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to draw the shape with
-   * @param rect The rectangular region to draw the shape in
+   * @param bounds The rectangular region to draw the shape in
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void DrawDottedRect(const IColor& color, const IRECT& rect, const IBlend* pBlend = 0) = 0;
+  virtual void DrawDottedRect(const IColor& color, const IRECT& bounds, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to fill the shape with
    * @param x1 The X coordinate in the graphics context of the first vertex
@@ -187,15 +187,15 @@ public:
   virtual void FillTriangle(const IColor& color, float x1, float y1, float x2, float y2, float x3, float y3, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to fill the shape with
-   * @param rect The rectangular region to fill the shape in
+   * @param bounds The rectangular region to fill the shape in
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void FillRect(const IColor& color, const IRECT& rect, const IBlend* pBlend = 0) = 0;
+  virtual void FillRect(const IColor& color, const IRECT& bounds, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to fill the shape with
-   * @param rect The rectangular region to fill the shape in
+   * @param bounds The rectangular region to fill the shape in
    * @param cr The corner radius in pixels
    * @param pBlend Optional blend method, see IBlend documentation */
-  virtual void FillRoundRect(const IColor& color, const IRECT& rect, float cr = 5.f, const IBlend* pBlend = 0) = 0;
+  virtual void FillRoundRect(const IColor& color, const IRECT& bounds, float cr = 5.f, const IBlend* pBlend = 0) = 0;
 
   /** @param color The color to fill the shape with
    * @param cx The X coordinate in the graphics context of the centre of the circle
@@ -248,7 +248,7 @@ public:
   virtual const char* GetDrawingAPIStr() = 0;
 
   /** This is overridden in some IGraphics drawing classes to clip drawing to a rectangular region
-   * @param rect The rectangular region to clip  */
+   * @param bounds The rectangular region to clip  */
   inline virtual void ClipRegion(const IRECT& rect) {};
 
   /** This is overridden in some IGraphics drawing classes to reset clipping after drawing a shape */
@@ -257,7 +257,7 @@ public:
 #pragma mark - IGraphics drawing API implementation (bitmap handling)
   virtual IBitmap LoadBitmap(const char* name, int nStates = 1, bool framesAreHorizontal = false);
   virtual IBitmap ScaleBitmap(const IBitmap& srcbitmap, const char* cacheName, int targetScale);
-  //virtual IBitmap CropBitmap(const IBitmap& bitmap, const IRECT& rect, const char* name, int targetScale) = 0;
+  //virtual IBitmap CropBitmap(const IBitmap& bitmap, const IRECT& bounds, const char* name, int targetScale) = 0;
   virtual void RetainBitmap(const IBitmap& bitmap, const char* cacheName);
   virtual void ReleaseBitmap(const IBitmap& bitmap);
   IBitmap GetScaledBitmap(IBitmap& src);
@@ -278,15 +278,15 @@ public:
   /** Draws a bitmap into the graphics context
 
  @param bitmap - the bitmap to draw
-   * @param rect - where to draw the bitmap
+   * @param bounds - where to draw the bitmap
    * @param bmpState - the frame of the bitmap to draw
    * @param pBlend - blend operation
   */
-  void DrawBitmap(IBitmap& bitmap, const IRECT& rect, int bmpState = 1, const IBlend* pBlend = 0);
+  void DrawBitmap(IBitmap& bitmap, const IRECT& bounds, int bmpState = 1, const IBlend* pBlend = 0);
 
   /** Draws monospace bitmapped text. Useful for identical looking text on multiple platforms.
    * @param bitmap the bitmap containing glyphs to draw
-   * @param rect where to draw the bitmap
+   * @param bounds where to draw the bitmap
    * @param text text properties (note - many of these are irrelevant for bitmapped text)
    * @param pBlend blend operation
    * @param str the string to draw
@@ -296,21 +296,21 @@ public:
    * @param charHeight how high is a character in the bitmap
    * @param charOffset what is the offset between characters drawn
   */
-  void DrawBitmapedText(IBitmap& bitmap, IRECT& rect, IText& text, IBlend* pBlend, const char* str, bool vCenter = true, bool multiline = false, int charWidth = 6, int charHeight = 12, int charOffset = 0);
+  void DrawBitmapedText(IBitmap& bitmap, IRECT& bounds, IText& text, IBlend* pBlend, const char* str, bool vCenter = true, bool multiline = false, int charWidth = 6, int charHeight = 12, int charOffset = 0);
 
   /** @param color The color to fill the shape with
-   * @param rect The rectangular region to fill the shape in
+   * @param bounds The rectangular region to fill the shape in
    * @param x The X coordinate in the graphics context at which to draw
    * @param pBlend Optional blend method, see IBlend documentation
   */
-  void DrawVerticalLine(const IColor& color, const IRECT& rect, float x, const IBlend* pBlend = 0);
+  void DrawVerticalLine(const IColor& color, const IRECT& bounds, float x, const IBlend* pBlend = 0);
 
   /** @param color The color to fill the shape with
-   * @param rect The rectangular region to fill the shape in
+   * @param bounds The rectangular region to fill the shape in
    * @param y The Y coordinate in the graphics context at which to draw
    * @param pBlend Optional blend method, see IBlend documentation
   */
-  void DrawHorizontalLine(const IColor& color, const IRECT& rect, float y, const IBlend* pBlend = 0);
+  void DrawHorizontalLine(const IColor& color, const IRECT& bounds, float y, const IBlend* pBlend = 0);
 
   /** @param color The color to fill the shape with
    * @param xi <#xi>
@@ -344,12 +344,12 @@ public:
   
   /**
   * @param color The color to fill the shape with
-   * @param rect The rectangular region to fill the shape in
+   * @param bounds The rectangular region to fill the shape in
    * @param gridSizeH <#gridSizeH>
    * @param gridSizeV <#gridSizeV>
    * @param pBlend Optional blend method, see IBlend documentation
    */
-  void DrawGrid(const IColor& color, const IRECT& rect, int gridSizeH, int gridSizeV, const IBlend* pBlend = 0);
+  void DrawGrid(const IColor& color, const IRECT& bounds, int gridSizeH, int gridSizeV, const IBlend* pBlend = 0);
   
 #pragma mark - IGraphics drawing API Path support
   
@@ -366,7 +366,7 @@ public:
   
   virtual void PathTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {}
   virtual void PathRect(const IRECT& rect) {}
-  virtual void PathRoundRect(const IRECT& rect, float cr = 5.f) {}
+  virtual void PathRoundRect(const IRECT& bounds, float cr = 5.f) {}
   virtual void PathArc(float cx, float cy, float r, float aMin, float aMax) {}
   virtual void PathCircle(float cx, float cy, float r) {}
   virtual void PathConvexPolygon(float* x, float* y, int nPoints) {}
@@ -511,11 +511,11 @@ public:
   IGraphics(IDelegate& dlg, int w, int h, int fps = 0);
   virtual ~IGraphics();
 
-  /** @param rect The rectangular region which will be added to to mark what is dirty in the context
+  /** @param bounds The rectangular region which will be added to to mark what is dirty in the context
    * @return <#return value> */
   bool IsDirty(IRECT& rect);
 
-  /** @param rect The rectangular region to draw */
+  /** @param bounds The rectangular region to draw */
   virtual void Draw(const IRECT& rect);
 
   /** @param name <#name>
@@ -628,8 +628,8 @@ public:
   /** @param x The X coordinate in the graphics context at which the mouse event occurred
    * @param y The Y coordinate in the graphics context at which the mouse event occurred
    * @param mod IMouseMod struct contain information about the modifiers held
-   * @param d Delta value /todo explain */
-  void OnMouseWheel(float x, float y, const IMouseMod& mod, float d);
+   * @param delta Delta value /todo explain */
+  void OnMouseWheel(float x, float y, const IMouseMod& mod, float delta);
 
   /** @param x The X coordinate in the graphics context of the mouse cursor at the time of the key press
    * @param y The Y coordinate in the graphics context of the mouse cursor at the time of the key press
