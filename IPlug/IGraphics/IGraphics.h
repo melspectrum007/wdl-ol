@@ -222,17 +222,17 @@ public:
 
   /** @param text An IText struct containing font and text properties and layout info
    * @param str The text string to draw in the graphics context
-   * @param destRect Either should contain the rectangular region in the graphics where you would like to draw the text (when measure = false)
+   * @param bounds Either should contain the rectangular region in the graphics where you would like to draw the text (when measure = false)
    * or if measure == true, after calling the method this IRECT will be updated with the rectangular region the text will occupy
    * @param measure Pass true if you wish to measure the rectangular region this text will occupy, rather than draw
    * @return true on valid input data /todo check this */
-  virtual bool DrawText(const IText& text, const char* str, IRECT& destRect, bool measure = false) = 0;
+  virtual bool DrawText(const IText& text, const char* str, IRECT& bounds, bool measure = false) = 0;
 
   /** @param text An IText struct containing font and text properties and layout info
    * @param str The text string to draw in the graphics context
-   * @param destRect after calling the method this IRECT will be updated with the rectangular region the text will occupy
+   * @param bounds after calling the method this IRECT will be updated with the rectangular region the text will occupy
    * @return true on valid input data /todo check this */
-  virtual bool MeasureText(const IText& text, const char* str, IRECT& destRect) = 0;
+  virtual bool MeasureText(const IText& text, const char* str, IRECT& bounds) = 0;
 
   /** Get the color of a pixel in the graphics context 
    * @param x The X coordinate in the graphics context of the pixel
@@ -244,14 +244,14 @@ public:
    * See draw class implementation headers (e.g. IGraphicsLice.h) for what you can cast the void pointer to */
    virtual void* GetData() = 0;
 
-  /** @return A string representing the Drawing API in use e.g. "LICE" */
+  /** @return A CString representing the Drawing API in use e.g. "LICE" */
   virtual const char* GetDrawingAPIStr() = 0;
 
   /** This is overridden in some IGraphics drawing classes to clip drawing to a rectangular region
    * @param bounds The rectangular region to clip  */
-  inline virtual void ClipRegion(const IRECT& rect) {};
+  inline virtual void ClipRegion(const IRECT& bounds) {};
 
-  /** This is overridden in some IGraphics drawing classes to reset clipping after drawing a shape */
+  /** This is overridden in some IGraphics drawing classes so you can reset clipping after drawing a shape */
   inline virtual void ResetClipRegion() {};
 
 #pragma mark - IGraphics drawing API implementation (bitmap handling)
@@ -262,29 +262,22 @@ public:
   virtual void ReleaseBitmap(const IBitmap& bitmap);
   IBitmap GetScaledBitmap(IBitmap& src);
 
-  /**
-   */
+  /** This method is called when display on which the UI resides changes scale, i.e. if the window is dragged from a high DPI screen to a low DPI screen or vice versa */
   virtual void OnDisplayScale();
 
   /** Called by some drawing API classes to finally blit the draw bitmap onto the screen */
-
-
-  /**
-   */
   virtual void RenderDrawBitmap() {}
 
 #pragma mark - IGraphics base implementation - drawing helpers
 
-  /** Draws a bitmap into the graphics context
-
- @param bitmap - the bitmap to draw
+  /** Draws a bitmap into the graphics context. NOTE: this helper method handles multi-frame bitmaps, indexable via frame
+   * @param bitmap - the bitmap to draw
    * @param bounds - where to draw the bitmap
-   * @param bmpState - the frame of the bitmap to draw
-   * @param pBlend - blend operation
-  */
-  void DrawBitmap(IBitmap& bitmap, const IRECT& bounds, int bmpState = 1, const IBlend* pBlend = 0);
+   * @param frame - the frame index of the bitmap to draw (when bitmap is multi-frame)
+   * @param pBlend - blend operation */
+  void DrawBitmap(IBitmap& bitmap, const IRECT& bounds, int frame = 1, const IBlend* pBlend = 0);
 
-  /** Draws monospace bitmapped text. Useful for identical looking text on multiple platforms.
+  /** Draws mono spaced bitmap text. Useful for identical looking text on multiple platforms.
    * @param bitmap the bitmap containing glyphs to draw
    * @param bounds where to draw the bitmap
    * @param text text properties (note - many of these are irrelevant for bitmapped text)
@@ -294,61 +287,55 @@ public:
    * @param multiline should the text spill onto multiple lines
    * @param charWidth how wide is a character in the bitmap
    * @param charHeight how high is a character in the bitmap
-   * @param charOffset what is the offset between characters drawn
-  */
+   * @param charOffset what is the offset between characters drawn */
   void DrawBitmapedText(IBitmap& bitmap, IRECT& bounds, IText& text, IBlend* pBlend, const char* str, bool vCenter = true, bool multiline = false, int charWidth = 6, int charHeight = 12, int charOffset = 0);
 
-  /** @param color The color to fill the shape with
-   * @param bounds The rectangular region to fill the shape in
+  /** Helper method to draw a vertical line, within a rectangular region 
+   * @param color The color to draw the line with
+   * @param bounds The rectangular region to draw the line in
    * @param x The X coordinate in the graphics context at which to draw
-   * @param pBlend Optional blend method, see IBlend documentation
-  */
+   * @param pBlend Optional blend method, see IBlend documentation */
   void DrawVerticalLine(const IColor& color, const IRECT& bounds, float x, const IBlend* pBlend = 0);
 
-  /** @param color The color to fill the shape with
-   * @param bounds The rectangular region to fill the shape in
-   * @param y The Y coordinate in the graphics context at which to draw
-   * @param pBlend Optional blend method, see IBlend documentation
-  */
+  /** Helper method to draw a horizontal line, within a rectangular region  
+   * @param color The color to draw the line with
+   * @param bounds The rectangular region to draw the line in
+   * @param y The Y coordinate in the graphics context at which to draw the horizontal line
+   * @param pBlend Optional blend method, see IBlend documentation */
   void DrawHorizontalLine(const IColor& color, const IRECT& bounds, float y, const IBlend* pBlend = 0);
 
-  /** @param color The color to fill the shape with
+  /** Helper method to draw a vertical line 
+   * @param color The color to draw the line with
    * @param xi <#xi>
    * @param yLo <#yLo>
    * @param yHi <#yHi>
-   * @param pBlend Optional blend method, see IBlend documentation
-  */
+   * @param pBlend Optional blend method, see IBlend documentation*/
   void DrawVerticalLine(const IColor& color, float xi, float yLo, float yHi, const IBlend* pBlend = 0);
 
-  /** @param color The color to fill the shape with
+  /** Helper method to draw a horizontal line 
+   * @param color The color to draw the line with
    * @param yi <#yi>
    * @param xLo <#xLo>
    * @param xHi <#xHi>
-   * @param pBlend Optional blend method, see IBlend documentation
-  */
+   * @param pBlend Optional blend method, see IBlend documentation */
   void DrawHorizontalLine(const IColor& color, float yi, float xLo, float xHi, const IBlend* pBlend = 0);
 
-  
-  /**
-   Helper function to draw a radial line, useful for pointers on dials
-   
-   * @param color the color of the line
+  /** Helper method to draw a radial line, useful for pointers on dials
+   * @@param color The color to draw the line with
    * @param cx centre point x coordinate
    * @param cy centre point y coordinate
    * @param angle The angle to draw at in degrees clockwise where 0 is up
    * @param rMin minima of the radial line (distance from cx,cy)
    * @param rMax maxima of the radial line (distance from cx,cy)
-   * @param pBlend blend operation
-   */
+   * @param pBlend Optional blend method, see IBlend documentation */
   void DrawRadialLine(const IColor& color, float cx, float cy, float angle, float rMin, float rMax, const IBlend* pBlend = 0);
   
-  /**
-  * @param color The color to fill the shape with
-   * @param bounds The rectangular region to fill the shape in
-   * @param gridSizeH <#gridSizeH>
-   * @param gridSizeV <#gridSizeV>
-   * @param pBlend Optional blend method, see IBlend documentation
-   */
+  /** Helper method to draw a grid
+   * @param color The color to draw the grid lines with
+   * @param bounds The rectangular region to fill the grid in
+   * @param gridSizeH The width of the grid cells
+   * @param gridSizeV The height of the grid cells
+   * @param pBlend Optional blend method, see IBlend documentation */
   void DrawGrid(const IColor& color, const IRECT& bounds, int gridSizeH, int gridSizeV, const IBlend* pBlend = 0);
   
 #pragma mark - IGraphics drawing API Path support
@@ -365,7 +352,7 @@ public:
   }
   
   virtual void PathTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {}
-  virtual void PathRect(const IRECT& rect) {}
+  virtual void PathRect(const IRECT& bounds) {}
   virtual void PathRoundRect(const IRECT& bounds, float cr = 5.f) {}
   virtual void PathArc(float cx, float cy, float r, float aMin, float aMax) {}
   virtual void PathCircle(float cx, float cy, float r) {}
@@ -379,13 +366,13 @@ public:
   virtual void PathFill(const IPattern& pattern, const IFillOptions& options = IFillOptions(), const IBlend* pBlend = 0) {}
 
 #pragma mark - IGraphics platform implementation
-  /** */ 
+  /** Call to hide the mouse cursor */ 
   virtual void HideMouseCursor() {};
 
-  /** */
+  /** Call to show the mouse cursor when it is hidden */ 
   virtual void ShowMouseCursor() {};
 
-  /** */ 
+  /** Call to force end text entry */ 
   virtual void ForceEndUserEdit() = 0;
 
   /** @param w <#w>
@@ -418,19 +405,19 @@ public:
   virtual int ShowMessageBox(const char* str, const char* caption, int type) = 0;
 
   /** @param menu <#menu>
-   * @param textRect <#textRect>
+   * @param bounds
    * @return <#return value> */
-  virtual IPopupMenu* CreateIPopupMenu(IPopupMenu& menu, IRECT& textRect) = 0;
+  virtual IPopupMenu* CreateIPopupMenu(IPopupMenu& menu, IRECT& bounds) = 0;
 
   /** @param pControl <#pControl>
    * @param text <#text>
-   * @param textRect <#textRect>
+   * @param bounds
    * @param "" <#"">
    * @param pParam <#pParam>  */
-  virtual void CreateTextEntry(IControl& control, const IText& text, const IRECT& textRect, const char* str = "") = 0;
+  virtual void CreateTextEntry(IControl& control, const IText& text, const IRECT& bounds, const char* str = "") = 0;
 
   /** @param filename <#filename>
-   * @param path <#path>
+   * @param path WDL_String reference where the path will be put on success or empty string on failure
    * @param action <#action>
    * @param extensions <#extensions> */
   virtual void PromptForFile(WDL_String& filename, WDL_String& path, EFileAction action = kFileOpen, const char* extensions = 0) = 0;
@@ -452,44 +439,45 @@ public:
 
   virtual bool WindowIsOpen() { return GetWindow(); }
 
-  /** @param path <#path> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure */
   virtual void HostPath(WDL_String& path) = 0;
 
-  /** @param path <#path> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure */
   virtual void PluginPath(WDL_String& path) = 0;
 
-  /** @param path <#path> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure */
   virtual void DesktopPath(WDL_String& path) = 0;
 
-  /** @param path <#path> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure */
   virtual void UserHomePath(WDL_String& path) = 0;
 
-  /** @param path <#path>
-   * @param isSystem <#isSystem> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure
+   * @param isSystem Set \c true if you want to obtain the system-wide path, otherwise the path will be in the user's home folder */
   virtual void AppSupportPath(WDL_String& path, bool isSystem = false) = 0;
 
-  /** @param path <#path> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure */
   virtual void SandboxSafeAppSupportPath(WDL_String& path) = 0;
 
-  /** @param path <#path>
-   * @param isSystem <#isSystem> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure
+   * @param mfrName CString to specify the manfucturer name, which will be the top level folder for .vstpreset files for this manufacturer's product
+   * @param pluginName CString to specify the plug-in name, which will be the sub folder (beneath mfrName) in which the .vstpreset files are located
+   * @param isSystem Set \c true if you want to obtain the system-wide path, otherwise the path will be in the user's home folder */
   virtual void VST3PresetsPath(WDL_String& path, const char* mfrName, const char* pluginName, bool isSystem = true) { path.Set(""); }
 
-  /** @param path <#path>
-   * @param select <#select>
-   * @return <#return value> */
+  /** @param path WDL_String reference where the path will be put on success or empty string on failure
+   * @param select et \c true if you want to select the item in Explorer/Finder
+   * @return \c true on success (if the path was valid) */
   virtual bool RevealPathInExplorerOrFinder(WDL_String& path, bool select = false) = 0;
 
   /* Used on Windows to set the HINSTANCE handle, which allows graphics APIs to load resources from the binary
    * @param instance <#instance> */
   virtual void SetPlatformInstance(void* pInstance) {}
 
-
   /** */
   virtual void* GetPlatformInstance() { return nullptr; }
 
   /**
-   Used with IGraphicsLice (possibly others) in order to set the core graphics draw context on macOS and the GDI HDC draw context handle on Windows
+   Used with IGraphicsLice (possibly others) in order to set the CoreGraphics draw context on macOS and the GDI HDC draw context handle on Windows
    On macOS, this is called by the platform IGraphics class IGraphicsMac, on Windows it is called by the drawing class e.g. IGraphicsLice.
 
    * @param pContext <#pContext> */
@@ -503,7 +491,7 @@ public:
    * @param name <#name>
    * @param type <#type>
    * @param result <#result>
-   * @return \c True on success */
+   * @return \c true on success */
   virtual bool OSFindResource(const char* name, const char* type, WDL_String& result) = 0;
 
 #pragma mark - IGraphics base implementation
@@ -512,23 +500,22 @@ public:
 
   /** @param bounds The rectangular region which will be added to to mark what is dirty in the context
    * @return <#return value> */
-  bool IsDirty(IRECT& rect);
+  bool IsDirty(IRECT& bounds);
 
   /** @param bounds The rectangular region to draw */
-  virtual void Draw(const IRECT& rect);
+  virtual void Draw(const IRECT& bounds);
 
   /** @param name <#name>
    * @return <#return value> */
-  virtual ISVG LoadSVG(const char* name); // TODO: correct place?
+  virtual ISVG LoadSVG(const char* name);
 
   /** This method is called after interacting with a control, so that any other controls linked to the same parameter index, will also be set dirty, and have their values updated.
-   * @param caller The control that triggered the parameter change. */
+   * @param pCaller The control that triggered the parameter change. */
   void UpdatePeers(IControl* pCaller);
 
-  /** @param pControl <#pControl>
-   * @param pParam <#pParam>
-   * @param textRect <#textRect> */
-  void PromptUserInput(IControl& control, IRECT& textRect);
+  /** @param control
+   * @param bounds /todo */
+  void PromptUserInput(IControl& control, IRECT& bounds);
 
   /** @param pControl <#pControl>
    * @param pParam <#pParam>
@@ -633,13 +620,13 @@ public:
   /** @param x The X coordinate in the graphics context of the mouse cursor at the time of the key press
    * @param y The Y coordinate in the graphics context of the mouse cursor at the time of the key press
    * @param key An integer represent the key pressed, see EIPlugKeyCodes
-   * @return \c True if handled /todo check this */
+   * @return \c true if handled /todo check this */
   bool OnKeyDown(float x, float y, int key);
 
   /** @param x The X coordinate in the graphics context at which to draw
    * @param y The Y coordinate in the graphics context at which to draw
    * @param mod IMouseMod struct contain information about the modifiers held
-   * @return \c True if handled /todo check this */
+   * @return \c true if handled /todo check this */
   bool OnMouseOver(float x, float y, const IMouseMod& mod);
 
   /** */
@@ -677,26 +664,26 @@ public:
    * @param y The Y coordinate in the graphics context at which to draw */
   void PopupHostContextMenuForParam(int controlIdx, int paramIdx, float x, float y);
 
-  /** @param enable Set \c True if you want to handle mouse over messages. Note: this may increase the amount CPU usage if you redraw on mouse overs etc */
+  /** @param enable Set \c true if you want to handle mouse over messages. Note: this may increase the amount CPU usage if you redraw on mouse overs etc */
   void HandleMouseOver(bool canHandle) { mHandleMouseOver = canHandle; }
 
   /***/ 
   void ReleaseMouseCapture();
 
-  /** @param enable Set \c True to enable tool tips when the user mouses over a control */
+  /** @param enable Set \c true to enable tool tips when the user mouses over a control */
   void EnableTooltips(bool enable);
 
   /** Call this method in order to create tool tips for every IControl that show the associated parameter's name */ 
   void AssignParamNameToolTips();
 
-  /** @param enable Set \c True if you wish to draw the rectangular region of the graphics context occupied by each IControl in mControls  */
+  /** @param enable Set \c true if you wish to draw the rectangular region of the graphics context occupied by each IControl in mControls  */
   inline void ShowControlBounds(bool enable) { mShowControlBounds = enable; }
 
-  /** @param enable Set \c True if you wish to show the rectangular region that is drawn on each frame, in order to debug redraw problems */
+  /** @param enable Set \c true if you wish to show the rectangular region that is drawn on each frame, in order to debug redraw problems */
   inline void ShowAreaDrawn(bool enable) { mShowAreaDrawn = enable; }
 
   /** Live edit mode allows you to relocate controls at runtime in debug builds and save the locations to a predefined file (e.g. main plugin .cpp file) /todo we need a separate page for liveedit info
-   * @param enable Set \c True if you wish to enable live editing mode
+   * @param enable Set \c true if you wish to enable live editing mode
    * @param file The absolute path of the file which contains the layout info (correctly tagged) for live editing
    * @param gridsize The size of the layout grid in pixels */
   void EnableLiveEdit(bool enable, const char* file = 0, int gridsize = 10);
@@ -710,13 +697,13 @@ public:
    * @return An IRECT that corresponds to the entire UI area, with, L = 0, T = 0, R = Width() and B  = Height() */
   IRECT GetBounds() const { return IRECT(0.f, 0.f, (float) Width(), (float) Height()); }
 
-  /** @return \c True if the context can handle mouse overs */
+  /** @return \c true if the context can handle mouse overs */
   bool CanHandleMouseOver() const { return mHandleMouseOver; }
 
   /** @return An integer representing the control index in IGraphics::mControls which the mouse is over, or -1 if it is not */
   inline int GetMouseOver() const { return mMouseOver; }
 
-  /** @return \c True if tool tips are enabled */
+  /** @return \c true if tool tips are enabled */
   inline bool TooltipsEnabled() const { return mEnableTooltips; }
 
   /** @param name The name of the font to load */
