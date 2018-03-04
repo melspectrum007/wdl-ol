@@ -41,7 +41,7 @@ public:
 
   /** Override this method to serialize custom state data, if your plugin does state chunks.
    * @param chunk The output bytechunk where data can be serialized
-   * @return \c True if serialization was successful*/
+   * @return \c true if serialization was successful*/
   virtual bool SerializeState(IByteChunk& chunk) { TRACE; return SerializeParams(chunk); }
 
   /** Override this method to unserialize custom state data, if your plugin does state chunks.
@@ -55,7 +55,7 @@ public:
    * to support the ProTools compare light when using custom state chunks. The default implementation will compare the serialized parameters.
    * @param incomingState The incoming state data
    * @param startPos The position to start in the incoming data in bytes
-   * @return \c True in order to indicate that the states are equal. */
+   * @return \c true in order to indicate that the states are equal. */
   virtual bool CompareState(const uint8_t* pIncomingState, int startPos);
 
   /** Override this method to be notified when the UI is opened. */
@@ -84,7 +84,7 @@ public:
    * Typically this might be used for a drum machine plug-in, in order to label a certainty "kick drum" etc.
    * @param noteNumber MIDI note to get the textual description for
    * @param str char array to set the text for the note. Should be less thatn kVstMaxNameLen (64) characters
-   * @return return \c true if you specified a custom textual description for this note */
+   * @return \c true if you specified a custom textual description for this note */
   virtual bool GetMidiNoteText(int noteNumber, char* str) const { *str = '\0'; return false; }
 
   /** You need to implement this method if you are not using IGraphics and you want to support AAX's view interface functionality
@@ -161,10 +161,10 @@ public:
    * @param str WDL_String will be set with the Plugin name, architecture, api, build date, build time*/
   void GetBuildInfoStr(WDL_String& str) const;
 
-  /** @return \c True if the plug-in has been set up to do state chunks, via config.h */
+  /** @return \c true if the plug-in has been set up to do state chunks, via config.h */
   bool DoesStateChunks() const { return mStateChunks; }
 
-  /** @return \c True if the plug-in is meant to have a UI, as defined in config.h */
+  /** @return \c true if the plug-in is meant to have a UI, as defined in config.h */
   bool HasUI() const { return mHasUI; }
 
   /** @return The default width of the plug-in UI in pixels, if defined in config.h */
@@ -236,7 +236,7 @@ public:
 
   /** Serializes the current double precision floating point, non-normalised values (IParam::mValue) of all parameters, into a binary byte chunk.
    * @param chunk The output chunk to serialize to. Will append data if the chunk has already been started.
-   * @return return \c true if the serialization was successful */
+   * @return \c true if the serialization was successful */
   bool SerializeParams(IByteChunk& chunk);
 
   /** Unserializes double precision floating point, non-normalised values from a byte chunk into mParams.

@@ -67,17 +67,17 @@ public:
 
   /** Send a single MIDI message
    * @param msg The IMidiMsg to send
-   * @return \c True if successful */
+   * @return \c true if successful */
   virtual bool SendMidiMsg(const IMidiMsg& msg) = 0;
 
   /** Send a collection of MIDI messages
    * @param msg The IMidiMsg to send
-   * @return \c True if successful */
+   * @return \c true if successful */
   bool SendMidiMsgs(WDL_TypedBuf<IMidiMsg>& msgs);
 
   /** Send a single MIDI System Exclusive (SysEx) message
    * @param msg The ISysEx to send
-   * @return \c True if successful */
+   * @return \c true if successful */
   virtual bool SendSysEx(ISysEx& msg) { return false; }
 
   /** @return Sample rate (in Hz) */
@@ -92,10 +92,10 @@ public:
   /** @return The tail size in samples (useful for reverberation plug-ins, that may need to decay after the transport stops or an audio item ends) */
   int GetTailSize() { return mTailSize; }
 
-  /** @return \c True if the plugin is currently bypassed */
+  /** @return \c true if the plugin is currently bypassed */
   bool GetBypassed() const { return mBypassed; }
 
-  /** @return \c True if the plugin is currently rendering off-line */
+  /** @return \c true if the plugin is currently rendering off-line */
   bool GetRenderingOffline() const { return mRenderingOffline; };
 
 #pragma mark -
@@ -132,7 +132,7 @@ public:
 
   /** Check if we have any wildcard characters in the channel io configs
    * @param direction Return input or output bus count
-   * @return \c True if the bus has a wildcard, meaning it should work on any number of channels */
+   * @return \c true if the bus has a wildcard, meaning it should work on any number of channels */
   bool HasWildcardBus(ERoute direction) const { return mIOConfigs.Get(0)->ContainsWildcard(direction); } // /todo only supports a single I/O config
 
   /** @param direction Whether you want to test inputs or outputs
@@ -141,7 +141,7 @@ public:
 
   /** @param direction Whether you want to test inputs or outputs
     * @param chIdx channel index
-    * @return \c True if the host has connected this channel*/
+    * @return \c true if the host has connected this channel*/
   bool IsChannelConnected(ERoute direction, int chIdx) const { return (chIdx < mChannelData[direction].GetSize() && mChannelData[direction].Get(chIdx)->mConnected); }
 
   /** @param direction Whether you want to test inputs or outputs
@@ -151,10 +151,10 @@ public:
   /** Check if a certain configuration of input channels and output channels is allowed based on the channel I/O configs
    * @param NInputChans Number of inputs to test, if set to -1 = check NOutputChans only
    * @param NOutputChans Number of outputs to test, if set to -1 = check NInputChans only
-   * @return \c True if the configurations is valid */
+   * @return \c true if the configurations is valid */
   bool LegalIO(int NInputChans, int NOutputChans) const; //TODO: this should be updated
 
-  /** @return \c True if this plug-in has a side-chain input, which may not necessarily be active in the current io config */
+  /** @return \c true if this plug-in has a side-chain input, which may not necessarily be active in the current io config */
   bool HasSidechainInput() const { return MaxNBuses(ERoute::kInput) > 1; }
 
   /** @return The number of channels and the side-chain input /todo this will change */
@@ -163,10 +163,10 @@ public:
   /** This is called by IPlugVST in order to limit a plug-in to stereo I/O for certain picky hosts /todo may no longer be relevant*/
   void LimitToStereoIO();//TODO: this should be updated
 
-  /** @return \c True if the plug-in was configured as an instrument at compile time */
+  /** @return \c true if the plug-in was configured as an instrument at compile time */
   bool IsInstrument() const { return mIsInstrument; }
 
-  /** @return \c True if the plug-in was configured to receive midi at compile time */
+  /** @return \c true if the plug-in was configured to receive midi at compile time */
   bool DoesMIDI() const { return mDoesMIDI; }
 
   /**  This allows you to label input/output channels in supporting VST2 hosts.

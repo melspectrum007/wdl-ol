@@ -45,7 +45,7 @@ public:
    * @return Current value of the parameter */
   double Value() const { return mValue; }
   /** Returns the parameter's value as a boolean
-   * @return \c True if value >= 0.5, else otherwise */
+   * @return \c true if value >= 0.5, else otherwise */
   bool Bool() const { return (mValue >= 0.5); }
   /** Returns the parameter's value as an integer
    * @return Current value of the parameter */
