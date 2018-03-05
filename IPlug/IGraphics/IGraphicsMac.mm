@@ -531,14 +531,14 @@ bool IGraphicsMac::PromptForColor(IColor& color, const char* str)
   return false;
 }
 
-IPopupMenu* IGraphicsMac::CreateIPopupMenu(IPopupMenu& menu, IRECT& textRect)
+IPopupMenu* IGraphicsMac::CreatePopupMenu(IPopupMenu& menu, IRECT& textRect)
 {
   ReleaseMouseCapture();
 
   if (mView)
   {
     NSRect areaRect = ToNSRect(this, textRect);
-    return [(IGRAPHICS_VIEW*) mView createIPopupMenu: menu: areaRect];
+    return [(IGRAPHICS_VIEW*) mView createPopupMenu: menu: areaRect];
   }
   else return 0;
 }

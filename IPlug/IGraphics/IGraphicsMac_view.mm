@@ -481,7 +481,7 @@ inline int GetMouseOver(IGraphicsMac* pGraphics)
   [self setNeedsDisplay: YES];
 }
 
-- (IPopupMenu*) createIPopupMenu: (IPopupMenu&) menu : (NSRect) rect;
+- (IPopupMenu*) createPopupMenu: (IPopupMenu&) menu : (NSRect) rect;
 {
   IGRAPHICS_MENU_RCVR* dummyView = [[[IGRAPHICS_MENU_RCVR alloc] initWithFrame:rect] autorelease];
   NSMenu* nsMenu = [[[IGRAPHICS_MENU alloc] initWithIPopupMenuAndReciever:&menu :dummyView] autorelease];

@@ -22,8 +22,6 @@ static double sFPS = 0.0;
 #define IPLUG_WIN_MAX_WIDE_PATH 4096
 
 // Unicode helpers
-
-
 void UTF8ToUTF16(wchar_t* utf16Str, const char* utf8Str, int maxLen)
 {
   int requiredSize = MultiByteToWideChar(CP_UTF8, 0, utf8Str, -1, NULL, 0);
@@ -51,7 +49,6 @@ void UTF16ToUTF8(WDL_String& utf8Str, const wchar_t* utf16Str)
 }
 
 // Helper for getting a known folder in UTF8
-
 void GetKnownFolder(WDL_String &path, int identifier, int flags = 0)
 {
   wchar_t wideBuffer[1024];
@@ -784,33 +781,33 @@ IPopupMenu* IGraphicsWin::GetItemMenu(long idx, long &idxInMenu, long &offsetIdx
     return &baseMenu;
   }
 
-  IPopupMenu* menu = 0;
+  IPopupMenu* pMenu = nullptr;
 
   for(int i = 0; i< baseMenu.NItems(); i++)
   {
-    IPopupMenu::Item* menuItem = baseMenu.GetItem(i);
-    if(menuItem->GetSubmenu())
+    IPopupMenu::Item* pMenuItem = baseMenu.GetItem(i);
+    if(pMenuItem->GetSubmenu())
     {
-      menu = GetItemMenu(idx, idxInMenu, offsetIdx, *menuItem->GetSubmenu());
+      pMenu = GetItemMenu(idx, idxInMenu, offsetIdx, *pMenuItem->GetSubmenu());
 
-      if(menu)
+      if(pMenu)
         break;
     }
   }
 
-  return menu;
+  return pMenu;
 }
 
-HMENU IGraphicsWin::CreateMenu(IPopupMenu& menu, long* offsetIdx)
+HMENU IGraphicsWin::CreateMenu(IPopupMenu& menu, long* pOffsetIdx)
 {
   HMENU hMenu = CreatePopupMenu();
 
   WDL_String escapedText;
 
   int flags = 0;
-  long offset = *offsetIdx;
+  long offset = *pOffsetIdx;
   long nItems = menu.NItems();
-  *offsetIdx += nItems;
+  *pOffsetIdx += nItems;
   long inc = 0;
 
   for(int i = 0; i< nItems; i++)

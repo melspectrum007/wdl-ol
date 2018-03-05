@@ -402,10 +402,17 @@ public:
    * @return <#return value> */
   virtual int ShowMessageBox(const char* str, const char* caption, int type) = 0;
 
-  /** @param menu <#menu>
-   * @param bounds
-   * @return <#return value> */
-  virtual IPopupMenu* CreateIPopupMenu(IPopupMenu& menu, IRECT& bounds) = 0;
+  /** Shows a platform pop up/contextual menu in relation to a rectangular region of the graphics context
+   * @param menu Reference to an IPopupMenu class populated with the items for the platform menu
+   * @param bounds The platform menu will popup at the bottom left hand corner of this rectangular region
+   * @return Pointer to an IPopupMenu that represents the menu that user finally clicked on (might not be the same as menu if they clicked a submenu) */
+  virtual IPopupMenu* CreatePopupMenu(IPopupMenu& menu, IRECT& bounds) = 0;
+
+  /** Shows a platform pop up/contextual menu at point in the graphics context
+   * @param x The X coordinate in the graphics context at which to pop up the menu
+   * @param y The Y coordinate in the graphics context at which to pop up the menu
+   * @return Pointer to an IPopupMenu that represents the menu that user finally clicked on (might not be the same as menu if they clicked a submenu) */
+  IPopupMenu* CreatePopupMenu(IPopupMenu& menu, float x, float y) { const IRECT tempRect = IRECT(x,y,x,y); return CreatePopupMenu(menu, tempRect); }
 
   /** @param pControl <#pControl>
    * @param text <#text>
@@ -519,12 +526,6 @@ public:
    * @param pParam <#pParam>
    * @param txt <#txt> */
   void SetControlValueFromStringAfterPrompt(IControl& control, const char* txt);
-
-  /** @param menu <#menu>
-   * @param x The X coordinate in the graphics context at which to draw
-   * @param y The Y coordinate in the graphics context at which to draw
-   * @return <#return value> */
-  IPopupMenu* CreateIPopupMenu(IPopupMenu& menu, float x, float y) { IRECT tempRect = IRECT(x,y,x,y); return CreateIPopupMenu(menu, tempRect); }
 
   /** @param strict <#strict> */
   void SetStrictDrawing(bool strict);
