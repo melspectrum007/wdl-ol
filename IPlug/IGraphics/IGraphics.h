@@ -380,8 +380,7 @@ public:
    * @param scale <#scale>  */
   virtual void Resize(int w, int h, float scale);
 
-  /** @param pParentWnd <#pParentWnd>
-  */
+  /** @param pParentWnd <#pParentWnd> */
   virtual void* OpenWindow(void* pParentWnd) = 0;
 
   /** */ 
@@ -391,8 +390,7 @@ public:
   virtual void* GetWindow() = 0;
 
   /** @param str <#str>
-   * @return <#return value>
-  */
+   * @return <#return value>*/
   virtual bool GetTextFromClipboard(WDL_String& str) = 0;
 
   /** */ 
