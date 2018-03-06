@@ -1,0 +1,25 @@
+<map id="IGraphics.h" name="IGraphics.h">
+<area shape="rect" id="node2" href="$_i_control_8h.html" title="The lowest level base class of an IGraphics control. " alt="" coords="371,80,449,107"/>
+<area shape="rect" id="node7" href="$_i_graphics_8cpp_source.html" title="IGraphics.cpp" alt="" coords="40,229,142,256"/>
+<area shape="rect" id="node11" href="$_i_plug_base_graphics_8cpp_source.html" title="IPlugBaseGraphics.cpp" alt="" coords="616,155,774,181"/>
+<area shape="rect" id="node12" href="$_i_graphics_path_base_8h_source.html" title="IGraphicsPathBase.h" alt="" coords="1442,80,1589,107"/>
+<area shape="rect" id="node19" href="$_i_graphics_lice_8h_source.html" title="IGraphicsLice.h" alt="" coords="943,80,1056,107"/>
+<area shape="rect" id="node3" href="$_i_control_8cpp_source.html" title="IControl.cpp" alt="" coords="498,155,592,181"/>
+<area shape="rect" id="node4" href="$_i_controls_8h.html" title="A collection of IControls for common UI widgets, such as knobs, sliders, switches. " alt="" coords="286,155,372,181"/>
+<area shape="rect" id="node6" href="$_i_graphics_live_edit_8h_source.html" title="IGraphicsLiveEdit.h" alt="" coords="24,155,158,181"/>
+<area shape="rect" id="node8" href="$_i_graphics_mac_8mm_source.html" title="IGraphicsMac.mm" alt="" coords="991,304,1120,331"/>
+<area shape="rect" id="node9" href="$_i_graphics_mac__view_8mm_source.html" title="IGraphicsMac_view.mm" alt="" coords="513,304,676,331"/>
+<area shape="rect" id="node10" href="$_i_graphics_win_8cpp_source.html" title="IGraphicsWin.cpp" alt="" coords="792,229,918,256"/>
+<area shape="rect" id="node5" href="$_i_controls_8cpp_source.html" title="IControls.cpp" alt="" coords="286,229,385,256"/>
+<area shape="rect" id="node13" href="$_i_graphics_a_g_g_8h_source.html" title="IGraphicsAGG.h" alt="" coords="1534,155,1652,181"/>
+<area shape="rect" id="node15" href="$_i_graphics_cairo_8h_source.html" title="IGraphicsCairo.h" alt="" coords="1684,155,1804,181"/>
+<area shape="rect" id="node17" href="$_i_graphics_nano_v_g_8h_source.html" title="IGraphicsNanoVG.h" alt="" coords="1370,155,1509,181"/>
+<area shape="rect" id="node14" href="$_i_graphics_a_g_g_8cpp_source.html" title="IGraphicsAGG.cpp" alt="" coords="1527,229,1658,256"/>
+<area shape="rect" id="node16" href="$_i_graphics_cairo_8cpp_source.html" title="IGraphicsCairo.cpp" alt="" coords="1683,229,1817,256"/>
+<area shape="rect" id="node18" href="$_i_graphics_nano_v_g_8cpp_source.html" title="IGraphicsNanoVG.cpp" alt="" coords="1350,229,1502,256"/>
+<area shape="rect" id="node20" href="$_i_graphics_lice_8cpp_source.html" title="IGraphicsLice.cpp" alt="" coords="936,155,1062,181"/>
+<area shape="rect" id="node21" href="$_i_graphics_linux_8h_source.html" title="IGraphicsLinux.h" alt="" coords="1088,155,1208,181"/>
+<area shape="rect" id="node22" href="$_i_graphics_mac_8h_source.html" title="IGraphicsMac.h" alt="" coords="1232,155,1346,181"/>
+<area shape="rect" id="node24" href="$_i_graphics_win_8h_source.html" title="IGraphicsWin.h" alt="" coords="800,155,910,181"/>
+<area shape="rect" id="node23" href="$_i_graphics_mac__view_8h_source.html" title="IGraphicsMac_view.h" alt="" coords="1038,229,1185,256"/>
+</map>
